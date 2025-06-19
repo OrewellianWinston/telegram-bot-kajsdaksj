@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+  redis:
+    image: redis:6
+    ports:
+      - '6379:6379'
+  app:
+    build: .
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      ADMIN_IDS: ${ADMIN_IDS}
+      CHANNEL_ID: ${CHANNEL_ID}
+      DB_URL: postgresql+psycopg2://postgres:postgres@db:5432/postgres
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    ports:
+      - '8000:8000'
